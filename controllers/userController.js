@@ -57,9 +57,10 @@ const loginUser = async (req, res) => {
   try {
     const user = await USER.findOne({ email, role });
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "user doesnt exist" });
+      return res.status(401).json({
+        success: false,
+        message: "user doesnt exist, please register",
+      });
     }
 
     if (user.role !== role) {
@@ -71,7 +72,7 @@ const loginUser = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res
-        .status(400)
+        .status(401)
         .json({ success: false, message: "Invalid email or password" });
     }
 
@@ -79,7 +80,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { email: user.email, role: user.role, id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: "1 day" }
+      { expiresIn: "2 days" }
     );
 
     return res.status(200).json({
@@ -99,7 +100,26 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await USER.findById(id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  
 };
