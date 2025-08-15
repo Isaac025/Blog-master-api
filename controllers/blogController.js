@@ -57,7 +57,6 @@ const deleteBlogById = async (req, res) => {
   const { id } = req.params;
   try {
     await BLOG.findByIdAndDelete(id);
-
     res
       .status(200)
       .json({ success: true, message: "Blog deleted successfully" });

@@ -9,9 +9,16 @@ The --Blog Master-- project is a RESTful API designed to manage blog content eff
 
 \*\*index.js: contains the connectDB function to connect to database, contains middleware such as app.use(express.json()) which is used to parse a body is JSON format and app.use(cors()) to allow the frontend access the backend api
 
+# Features
+- User registration and login
+- JWT authentication
+- Role-based access control (User/Admin)
+- CRUD operations for blog posts
+- Post publishing togggle
+
 # Installation & setup instructions
 
-npm install (to install packages)
+npm install ''bash (to install packages)
 
 1. express – Web framework for Node.js
 2. mongoose – MongoDB object modeling
@@ -23,16 +30,16 @@ npm install (to install packages)
 
 npm run dev -- to start the server or nodemon index.js
 postman - To test the Api
-.env - environmental variables
+.env - environmental variables (MONGODB_URI connection string, secret key for JWT signing)
 index.js - App entry point
 
 # API Endpoint list
 
-POST /api/blog/add -- addBlog -- auth required(isLoggedIn, requiredPermissions("admin"))
+POST /api/blog/add -- addBlog -- auth required(isLoggedIn) requiredPermissions("admin")
 GET /api/blog/all -- getAllBlogs -- auth required(isLoggedIn)
 GET /api/blog/:id -- getBlogById -- auth required(isLoggedIn)
-DELETE /api/blog/:id -- deleteBlogById -- auth required(isLoggedIn, requiredPermissions("admin"))
-PATCH /api/blog/:id -- togglePublish -- auth required(isLoggedIn, requiredPermissions("admin"))
+DELETE /api/blog/:id -- deleteBlogById -- auth required(isLoggedIn) requiredPermissions("admin")
+PATCH /api/blog/:id -- togglePublish -- auth required(isLoggedIn) requiredPermissions("admin")
 
 (user login and registration)
 POST /api/auth/login -- loginUser
@@ -42,22 +49,27 @@ POST /api/auth/register -- registerUser
 
 Authentication ensures that only registered users can access certain parts of the API.
 In this project, authentication is implemented using JSON Web Tokens (JWT):
+
 1. User registers or logs in by providing valid credentials.
 2. On successful login, the server generates a JWT signed with a secret key.
 3. The client stores this token (usually in localStorage).
 4. The server verifies the token before processing a request
+
 # Authroization (Role Based Access)
+
 1. Each user has a role (e.g user, admin)
 2. Roles are assigned during registration
 3. Protected routes check both:
-    ..If the user is authenticated (has a valid token).
-    ..If the user’s role has permission to perform the action.
+   ..If the user is authenticated (has a valid token).
+   ..If the user’s role has permission to perform the action.
 
-For example, 
+For example,
+
 1. A user can Read Blog posts
 2. can see all blog post created by the admin
 
-An Admin can: 
+An Admin can:
+
 1. Do Everything a user can
 2. Delete a post and publish / unpublish post
 3. create blog post
