@@ -29,7 +29,9 @@ const addBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await BLOG.find({ isPublished: true });
+    const blogs = await BLOG.find({ isPublished: true }).sort({
+      createdAt: -1,
+    });
     res.status(200).json({ success: true, blogs });
   } catch (error) {
     console.error(error);
